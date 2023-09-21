@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,7 +23,6 @@ func ConnectDB() *mongo.Client {
 		log.Fatal(err)
 	}
 
-	//ping the database
 	err = client.Ping(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -31,10 +31,12 @@ func ConnectDB() *mongo.Client {
 	return client
 }
 
-// Client instance
+func EnvJWTSecret() string {
+	return os.Getenv("JWT_SECRET_KEY")
+}
+
 var DB *mongo.Client = ConnectDB()
 
-// getting database collections
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 	collection := client.Database("disdeck-db").Collection(collectionName)
 	return collection

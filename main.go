@@ -17,6 +17,7 @@ func main() {
 	configs.ConnectDB()
 
 	routes.MenuRoutes(app)
+	routes.UserRoutes(app)
 
 	app.Listen(":8081")
 }
