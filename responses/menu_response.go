@@ -9,3 +9,19 @@ type MenuResponse struct {
 	Message string     `json:"message"`
 	Data    *fiber.Map `json:"data"`
 }
+
+func SuccessResponse(c *fiber.Ctx, statusCode int, data interface{}) error {
+	return c.Status(statusCode).JSON(MenuResponse{
+		Status:  statusCode,
+		Message: "success",
+		Data:    &fiber.Map{"data": data},
+	})
+}
+
+func ErrorResponse(c *fiber.Ctx, statusCode int, errMsg string) error {
+	return c.Status(statusCode).JSON(MenuResponse{
+		Status:  statusCode,
+		Message: "error",
+		Data:    &fiber.Map{"data": errMsg},
+	})
+}
