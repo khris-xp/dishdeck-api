@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+
+	"dishdeck-api/configs"
+	"dishdeck-api/routes"
 )
 
 func main() {
@@ -10,6 +13,10 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(&fiber.Map{"data": "Hello, from Disdeck API"})
 	})
+
+	configs.ConnectDB()
+
+	routes.MenuRoutes(app)
 
 	app.Listen(":8081")
 }
