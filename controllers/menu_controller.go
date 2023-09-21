@@ -1,10 +1,10 @@
-// controllers/menu_controller.go
 package controllers
 
 import (
 	"dishdeck-api/models"
 	"dishdeck-api/repositories"
 	"dishdeck-api/responses"
+	"dishdeck-api/types"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -64,4 +64,55 @@ func (mc *MenuController) GetMenuByID(c *fiber.Ctx) error {
 	}
 
 	return responses.SuccessResponse(c, http.StatusOK, menu)
+}
+
+func (mc *MenuController) UpdateMenuByID(ctx *fiber.Ctx) error {
+	menuID := ctx.Params("id")
+	id, err := primitive.ObjectIDFromHex(menuID)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	var reqBody types.MenuUpdateRequest
+	if err := ctx.BodyParser(&reqBody); err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	if validationErr := validate.Struct(&reqBody); validationErr != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, validationErr.Error())
+	}
+
+	existingMenu, err := mc.MenuRepo.GetMenuByID(ctx.Context(), id)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	existingMenu.Name = reqBody.Name
+	existingMenu.Description = reqBody.Description
+	existingMenu.ImageUrl = reqBody.ImageUrl
+	existingMenu.Category = reqBody.Category
+
+	err = mc.MenuRepo.UpdateMenuByID(ctx.Context(), id, existingMenu)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, existingMenu)
+}
+
+func (mc *MenuController) DeleteMenuByID(ctx *fiber.Ctx) error {
+	menuId := ctx.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
+
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	err = mc.MenuRepo.DeleteMenuByID(ctx.Context(), id)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, nil)
 }

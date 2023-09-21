@@ -70,3 +70,27 @@ func (r *MenuRepository) GetMenuByID(ctx context.Context, id primitive.ObjectID)
 
 	return menu, nil
 }
+
+func (r *MenuRepository) UpdateMenuByID(ctx context.Context, id primitive.ObjectID, menu models.Menu) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": menu})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *MenuRepository) DeleteMenuByID(ctx context.Context, id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
