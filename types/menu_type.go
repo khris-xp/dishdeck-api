@@ -16,3 +16,11 @@ type MenuUpdateRequest struct {
 	ImageUrl    string `json:"imageUrl" validate:"required"`
 	Category    string `json:"category" validate:"required"`
 }
+
+type MenuCreateRequest struct {
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description" validate:"required"`
+	ImageUrl    string `json:"imageUrl" validate:"required"`
+	Category    string `json:"category" validate:"required"`
+	CreatedBy string ``
+}

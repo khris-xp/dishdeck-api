@@ -27,6 +27,8 @@ func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu) (prim
 	defer cancel()
 
 	menu.Id = primitive.NewObjectID()
+	menu.CreatedAt = time.Now()
+	menu.UpdatedAt = time.Now()
 	_, err := menuCollection.InsertOne(ctx, menu)
 	if err != nil {
 		return primitive.NilObjectID, err
@@ -75,6 +77,7 @@ func (r *MenuRepository) UpdateMenuByID(ctx context.Context, id primitive.Object
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
+	menu.UpdatedAt = time.Now()
 	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": menu})
 	if err != nil {
 		return err

@@ -11,7 +11,7 @@ func UserRoutes(app *fiber.App) {
 	userRepo := repositories.NewUserRepository()
 	userController := controllers.NewAuthController(userRepo)
 
-	app.Post("/register", userController.Register)
-	app.Post("/login", userController.Login)
-	app.Get("/user", userController.GetUserProfile)
+	app.Post("/auth/register", userController.Register)
+	app.Post("auth/login", userController.Login)
+	app.Get("auth//user", userController.GetUserProfile)
 }
