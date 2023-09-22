@@ -36,6 +36,8 @@ func (r *UserRepository) RegisterUser(ctx context.Context, user models.User) (st
 	}
 
 	user.Password = string(hashedPassword)
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 
 	_, err = userCollection.InsertOne(ctx, user)
 	if err != nil {
@@ -44,7 +46,7 @@ func (r *UserRepository) RegisterUser(ctx context.Context, user models.User) (st
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = user.Username
+	claims["email"] = user.Email
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString(jwtSecret)
@@ -61,6 +63,19 @@ func (r *UserRepository) GetUserByUsername(ctx context.Context, username string)
 
 	var user models.User
 	err := userCollection.FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+
+func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, userTimeout)
+	defer cancel()
+
+	var user models.User
+	err := userCollection.FindOne(ctx, bson.M{"email": email}).Decode(&user)
 	if err != nil {
 		return models.User{}, err
 	}

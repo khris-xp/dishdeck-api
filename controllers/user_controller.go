@@ -43,7 +43,7 @@ func (ac *AuthController) Register(c *fiber.Ctx) error {
 
 func (ac *AuthController) Login(c *fiber.Ctx) error {
 	var loginData struct {
-		Username string `json:"username"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
@@ -51,7 +51,7 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	user, err := ac.UserRepo.GetUserByUsername(c.Context(), loginData.Username)
+	user, err := ac.UserRepo.GetUserByEmail(c.Context(), loginData.Email)
 	if err != nil {
 		return fiber.ErrUnauthorized
 	}
@@ -62,7 +62,7 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = user.Username
+	claims["email"] = user.Email
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString(jwtSecret)
@@ -93,22 +93,30 @@ func (ac *AuthController) GetUserProfile(c *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
-	username, ok := claims["username"].(string)
+	email, ok := claims["email"].(string)
 	if !ok {
 		return fiber.ErrUnauthorized
 	}
 
-	user, err := ac.UserRepo.GetUserByUsername(c.Context(), username)
+	user, err := ac.UserRepo.GetUserByEmail(c.Context(), email)
 	if err != nil {
 		return fiber.ErrUnauthorized
 	}
 
 	profile := struct {
-		ID        string    `bson:"_id,omitempty"`
-		Username  string    `json:"username"`
+		Id          string    `bson:"_id,omitempty"`
+		Username    string    `json:"username"`
+		Email       string    `json:"email"`
+		UserProfile string    `json:"userProfile"`
+		CreatedAt   time.Time `json:"createdAt"`
+		UpdatedAt   time.Time `json:"updatedAt"`
 	}{
-		ID:        user.ID,
-		Username:  user.Username,
+		Id:          user.Id,
+		Username:    user.Username,
+		Email:       user.Email,
+		UserProfile: user.UserProfile,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
 	}
 
 	return c.JSON(profile)

@@ -42,8 +42,7 @@ func AuthMiddleware() fiber.Handler {
 				"message": "Unauthorized",
 			})
 		}
-
-		// Attach the username to the context for later use in controllers
+		
 		c.Locals("username", username)
 
 		return c.Next()
