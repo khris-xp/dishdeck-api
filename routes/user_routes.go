@@ -12,6 +12,6 @@ func UserRoutes(app *fiber.App) {
 	userController := controllers.NewAuthController(userRepo)
 
 	app.Post("/auth/register", userController.Register)
-	app.Post("/auth/login", userController.Login)
+	app.Post("auth/login", userController.Login)
 	app.Get("/auth/user", userController.GetUserProfile)
 }

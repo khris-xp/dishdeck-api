@@ -22,5 +22,5 @@ type MenuCreateRequest struct {
 	Description string `json:"description" validate:"required"`
 	ImageUrl    string `json:"imageUrl" validate:"required"`
 	Category    string `json:"category" validate:"required"`
-	CreatedBy   string `json:"createdBy" validate:"required"`
+	CreatedBy string ``
 }
