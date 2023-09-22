@@ -22,13 +22,22 @@ func NewMenuRepository() *MenuRepository {
 	return &MenuRepository{}
 }
 
-func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu) (primitive.ObjectID, error) {
+func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu, user models.User) (primitive.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
 	menu.Id = primitive.NewObjectID()
 	menu.CreatedAt = time.Now()
 	menu.UpdatedAt = time.Now()
+	menu.CreatedBy = models.User{
+		Id:          user.Id,
+		Username:    user.Username,
+		Email:       user.Email,
+		Password:    user.Password,
+		UserProfile: user.UserProfile,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+	}
 	_, err := menuCollection.InsertOne(ctx, menu)
 	if err != nil {
 		return primitive.NilObjectID, err

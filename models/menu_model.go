@@ -12,7 +12,7 @@ type Menu struct {
 	Description string             `json:"description,omitempty" validate:"required"`
 	ImageUrl    string             `json:"imageUrl,omitempty" validate:"required"`
 	Category    string             `json:"category,omitempty" validate:"required"`
-	CreatedBy   string             `json:"createdBy,omitempty" validate:"required"`
+	CreatedBy   User               `json:"createdBy"`
 	CreatedAt   time.Time          `json:"createdAt" bson:"createdAt"`
 	UpdatedAt   time.Time          `json:"updatedAt" bson:"updatedAt"`
 }

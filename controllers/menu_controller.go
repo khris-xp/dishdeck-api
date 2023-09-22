@@ -1,20 +1,27 @@
 package controllers
 
 import (
+	"context"
+	"dishdeck-api/configs"
 	"dishdeck-api/models"
 	"dishdeck-api/repositories"
 	"dishdeck-api/responses"
 	"dishdeck-api/types"
 	"net/http"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var (
 	validate = validator.New()
 )
+
+var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type MenuController struct {
 	MenuRepo *repositories.MenuRepository
@@ -26,6 +33,18 @@ func NewMenuController(menuRepo *repositories.MenuRepository) *MenuController {
 
 func (mc *MenuController) CreateMenu(c *fiber.Ctx) error {
 	var menu models.Menu
+
+	email, exists := c.Locals("email").(string)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if !exists {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "email not found")
+	}
+
+	var user models.User
+	err := userCollection.FindOne(ctx, bson.M{"email": email}).Decode(&user)
+
 	if err := c.BodyParser(&menu); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
@@ -34,7 +53,7 @@ func (mc *MenuController) CreateMenu(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, validationErr.Error())
 	}
 
-	menuID, err := mc.MenuRepo.CreateMenu(c.Context(), menu)
+	menuID, err := mc.MenuRepo.CreateMenu(c.Context(), menu, user)
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}

@@ -36,14 +36,14 @@ func AuthMiddleware() fiber.Handler {
 			})
 		}
 
-		username, ok := claims["username"].(string)
+		email, ok := claims["email"].(string)
 		if !ok {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "Unauthorized",
 			})
 		}
-		
-		c.Locals("username", username)
+
+		c.Locals("email", email)
 
 		return c.Next()
 	}
