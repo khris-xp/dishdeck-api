@@ -9,6 +9,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -120,4 +121,17 @@ func (ac *AuthController) GetUserProfile(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(profile)
+}
+
+func (ac *AuthController) GetUserById(c *fiber.Ctx) error {
+	userId := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return err
+	}
+	user, err := ac.UserRepo.GetUserByID(c.Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(user)
 }

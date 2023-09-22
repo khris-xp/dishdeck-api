@@ -29,6 +29,7 @@ func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu, user 
 	menu.Id = primitive.NewObjectID()
 	menu.CreatedAt = time.Now()
 	menu.UpdatedAt = time.Now()
+	menu.Likes = 0
 	_, err := menuCollection.InsertOne(ctx, menu)
 	if err != nil {
 		return primitive.NilObjectID, err
@@ -91,6 +92,30 @@ func (r *MenuRepository) DeleteMenuByID(ctx context.Context, id primitive.Object
 	defer cancel()
 
 	_, err := menuCollection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *MenuRepository) LikedMenu(ctx context.Context, id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$inc": bson.M{"likes": 1}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *MenuRepository) UnlikedMenu(ctx context.Context, id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$inc": bson.M{"likes": -1}})
 	if err != nil {
 		return err
 	}

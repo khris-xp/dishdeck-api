@@ -17,4 +17,6 @@ func MenuRoutes(app *fiber.App) {
 	app.Get("/api/menu/:id", menuController.GetMenuByID)
 	app.Put("/api/menu/:id", middlewares.AuthMiddleware(), menuController.UpdateMenuByID)
 	app.Delete("/api/menu/:id", middlewares.AuthMiddleware(), menuController.DeleteMenuByID)
+	app.Put("/api/menu/:id/like", middlewares.AuthMiddleware(), menuController.LikedMenu)
+	app.Put("/api/menu/:id/unlike", middlewares.AuthMiddleware(), menuController.UnlikedMenu)
 }

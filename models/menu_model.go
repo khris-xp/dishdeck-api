@@ -13,6 +13,7 @@ type Menu struct {
 	ImageUrl    string             `json:"imageUrl,omitempty" validate:"required"`
 	Category    string             `json:"category,omitempty" validate:"required"`
 	CreatedBY   string             `json:"createdBy,omitempty"`
+	Likes       int                `json:"likes,omitempty"`
 	CreatedAt   time.Time          `json:"createdAt" bson:"createdAt"`
 	UpdatedAt   time.Time          `json:"updatedAt" bson:"updatedAt"`
 }

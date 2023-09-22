@@ -135,3 +135,37 @@ func (mc *MenuController) DeleteMenuByID(ctx *fiber.Ctx) error {
 
 	return responses.SuccessResponse(ctx, http.StatusOK, nil)
 }
+
+func (mc *MenuController) LikedMenu(ctx *fiber.Ctx) error {
+	menuId := ctx.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
+
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	err = mc.MenuRepo.LikedMenu(ctx.Context(), id)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+}
+
+func (mc *MenuController) UnlikedMenu(ctx *fiber.Ctx) error {
+	menuId := ctx.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
+
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	err = mc.MenuRepo.UnlikedMenu(ctx.Context(), id)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+}
