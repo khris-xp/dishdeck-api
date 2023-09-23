@@ -6,6 +6,7 @@ import (
 	"dishdeck-api/responses"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type StepController struct {
@@ -18,13 +19,15 @@ func NewStepController(stepRepo *repositories.StepRepository) *StepController {
 
 func (sc *StepController) CreateStep(c *fiber.Ctx) error {
 	var step models.Step
-	var menu models.Menu
+	menuId := c.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
 
 	if err := c.BodyParser(&step); err != nil {
 		return responses.ErrorResponse(c, fiber.StatusBadRequest, err.Error())
 	}
 
-	stepID, err := sc.StepRepo.CreateStep(c.Context(), step, menu)
+	stepID, err := sc.StepRepo.CreateStep(c.Context(), step, id)
 	if err != nil {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
@@ -39,4 +42,20 @@ func (sc *StepController) GetAllStep(c *fiber.Ctx) error {
 	}
 
 	return responses.SuccessResponse(c, fiber.StatusOK, step)
+}
+
+func (sc *StepController) GetStepByMenuId(c *fiber.Ctx) error {
+	menuIdStr := c.Params("id")
+
+	menuId, err := primitive.ObjectIDFromHex(menuIdStr)
+	if err != nil {
+		return responses.ErrorResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	steps, err := sc.StepRepo.GetStepByMenuId(c.Context(), menuId)
+	if err != nil {
+		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(c, fiber.StatusOK, steps)
 }

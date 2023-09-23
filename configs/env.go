@@ -15,3 +15,15 @@ func EnvMongoURI() string {
 
 	return os.Getenv("MONGOURI")
 }
+
+func EnvJWTSecret() string {
+	return os.Getenv("JWT_SECRET_KEY")
+}
+
+func EnvPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return port
+}

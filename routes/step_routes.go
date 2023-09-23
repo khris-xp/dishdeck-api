@@ -12,6 +12,7 @@ func StepRoutes(app *fiber.App) {
 	stepRepo := repositories.NewStepRepository()
 	stepController := controllers.NewStepController(stepRepo)
 
-	app.Post("/api/step", middlewares.AuthMiddleware(), stepController.CreateStep)
+	app.Post("/api/step/:id", middlewares.AuthMiddleware(), stepController.CreateStep)
 	app.Get("/api/step", stepController.GetAllStep)
+	app.Get("/api/step/:id", stepController.GetStepByMenuId)
 }

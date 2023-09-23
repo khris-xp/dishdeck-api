@@ -20,6 +20,6 @@ func main() {
 	routes.UserRoutes(app)
 	routes.StepRoutes(app)
 
-	port := configs.GetPort()
+	port := configs.EnvPort()
 	app.Listen(":" + port)
 }

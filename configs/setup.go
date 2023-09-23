@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,18 +28,6 @@ func ConnectDB() *mongo.Client {
 	}
 	fmt.Println("Connected to MongoDB")
 	return client
-}
-
-func EnvJWTSecret() string {
-	return os.Getenv("JWT_SECRET_KEY")
-}
-
-func GetPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	return port
 }
 
 var DB *mongo.Client = ConnectDB()
