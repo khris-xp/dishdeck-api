@@ -66,7 +66,7 @@ func (r *StepRepository) GetStepById(ctx context.Context, id primitive.ObjectID)
 	defer cancel()
 
 	var step models.Step
-	err := stepCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&step)
+	err := stepCollection.FindOne(ctx, bson.M{"id": id}).Decode(&step)
 	if err != nil {
 		return models.Step{}, err
 	}
@@ -94,4 +94,29 @@ func (r *StepRepository) GetStepByMenuId(ctx context.Context, id primitive.Objec
 	}
 
 	return step, nil
+}
+
+func (r *StepRepository) UpdateStepById(ctx context.Context, id primitive.ObjectID, step models.Step) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	step.UpdatedAt = time.Now()
+	_, err := stepCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": step})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *StepRepository) DeleteStepById(ctx context.Context, id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := stepCollection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
