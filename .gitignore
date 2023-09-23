@@ -4,10 +4,6 @@
 *.dll
 *.so
 *.dylib
-*.env
-*.env.example
-*.env.local
-*.env.staging
 # Test binary, built with `go test -c`
 *.test
 *.tmp

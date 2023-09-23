@@ -18,6 +18,7 @@ func main() {
 
 	routes.MenuRoutes(app)
 	routes.UserRoutes(app)
+	routes.StepRoutes(app)
 
 	app.Listen(":8081")
 }

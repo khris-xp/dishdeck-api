@@ -14,6 +14,7 @@ type Menu struct {
 	Category    string             `json:"category,omitempty" validate:"required"`
 	CreatedBY   string             `json:"createdBy,omitempty"`
 	Likes       int                `json:"likes,omitempty"`
+	Steps       []Step             `json:"steps,omitempty"`
 	CreatedAt   time.Time          `json:"createdAt" bson:"createdAt"`
 	UpdatedAt   time.Time          `json:"updatedAt" bson:"updatedAt"`
 }
