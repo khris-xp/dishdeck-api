@@ -17,13 +17,19 @@ func EnvMongoURI() string {
 }
 
 func EnvJWTSecret() string {
-	return os.Getenv("JWT_SECRET_KEY")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("JWT_SECRET")
 }
 
 func EnvPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
-	return port
+
+	return os.Getenv("PORT")
 }
