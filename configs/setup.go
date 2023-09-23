@@ -35,6 +35,14 @@ func EnvJWTSecret() string {
 	return os.Getenv("JWT_SECRET_KEY")
 }
 
+func GetPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return port
+}
+
 var DB *mongo.Client = ConnectDB()
 
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {

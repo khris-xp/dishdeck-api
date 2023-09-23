@@ -20,5 +20,6 @@ func main() {
 	routes.UserRoutes(app)
 	routes.StepRoutes(app)
 
-	app.Listen(":8081")
+	port := configs.GetPort()
+	app.Listen(":" + port)
 }
