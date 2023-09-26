@@ -4,6 +4,7 @@ import (
 	"dishdeck-api/configs"
 	"dishdeck-api/models"
 	"dishdeck-api/repositories"
+	"dishdeck-api/responses"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -134,4 +135,40 @@ func (ac *AuthController) GetUserById(c *fiber.Ctx) error {
 		return err
 	}
 	return c.JSON(user)
+}
+
+func (ac *AuthController) AddWishListByMenuID(c *fiber.Ctx) error {
+	userId := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return err
+	}
+	menuId := c.Params("menuId")
+	menuIdObj, err := primitive.ObjectIDFromHex(menuId)
+	if err != nil {
+		return err
+	}
+	err = ac.UserRepo.AddWishListByMenuID(c.Context(), menuIdObj, id)
+	if err != nil {
+		return err
+	}
+	return responses.SuccessResponse(c, fiber.StatusOK, nil)
+}
+
+func (ac *AuthController) RemoveWishListByMenuID(c *fiber.Ctx) error {
+	userId := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return err
+	}
+	menuId := c.Params("menuId")
+	menuIdObj, err := primitive.ObjectIDFromHex(menuId)
+	if err != nil {
+		return err
+	}
+	err = ac.UserRepo.RemoveWishListByMenuID(c.Context(), menuIdObj, id)
+	if err != nil {
+		return err
+	}
+	return responses.SuccessResponse(c, fiber.StatusOK, nil)
 }

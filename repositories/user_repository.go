@@ -4,6 +4,7 @@ import (
 	"context"
 	"dishdeck-api/configs"
 	"dishdeck-api/models"
+	"errors"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -94,4 +95,44 @@ func (r *UserRepository) GetUserByID(ctx context.Context, id primitive.ObjectID)
 	}
 
 	return user, nil
+}
+
+func (r *UserRepository) AddWishListByMenuID(ctx context.Context, menuID primitive.ObjectID, userID primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, userTimeout)
+	defer cancel()
+
+	user, err := r.GetUserByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	for _, wishlistMenuID := range user.Wishlist {
+		wishlistMenuIDObj, err := primitive.ObjectIDFromHex(wishlistMenuID)
+		if err != nil {
+			return err
+		}
+
+		if wishlistMenuIDObj == menuID {
+			return errors.New("MenuID already exists in the wishlist")
+		}
+	}
+
+	_, err = userCollection.UpdateOne(ctx, bson.M{"_id": userID}, bson.M{"$push": bson.M{"wishlist": menuID}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *UserRepository) RemoveWishListByMenuID(ctx context.Context, menuID primitive.ObjectID, userID primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(ctx, userTimeout)
+	defer cancel()
+
+	_, err := userCollection.UpdateOne(ctx, bson.M{"_id": userID}, bson.M{"$pull": bson.M{"wishlist": menuID}})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
