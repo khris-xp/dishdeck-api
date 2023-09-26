@@ -18,6 +18,7 @@ func main() {
 	routes.MenuRoutes(app)
 	routes.UserRoutes(app)
 	routes.StepRoutes(app)
+	routes.BlogRoutes(app)
 	port := configs.EnvPort()
 	app.Listen(":" + port)
 }
