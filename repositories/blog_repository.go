@@ -58,3 +58,45 @@ func (r *BlogRepository) GetAllBlog(ctx context.Context) ([]models.Blog, error) 
 
 	return blog, nil
 }
+
+func (r *BlogRepository) GetBlogById(ctx context.Context, id primitive.ObjectID) (models.Blog, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	var blog models.Blog
+
+	err := blogCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&blog)
+	if err != nil {
+		return models.Blog{}, err
+	}
+
+	return blog, nil
+}
+
+func (r *BlogRepository) UpdateBlogById(ctx context.Context, id primitive.ObjectID, blog models.Blog) (models.Blog, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	blog.UpdatedAt = time.Now()
+
+	var updatedBlog models.Blog
+
+	err := blogCollection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": blog}).Decode(&updatedBlog)
+	if err != nil {
+		return models.Blog{}, err
+	}
+
+	return updatedBlog, nil
+}
+
+func (r *BlogRepository) DeleteBlogById(ctx context.Context, id primitive.ObjectID) (int64, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := blogCollection.DeleteOne(ctx, bson.M{"_id": id})
+	if err != nil {
+		return 0, err
+	}
+
+	return 1, nil
+}

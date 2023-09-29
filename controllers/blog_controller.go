@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -61,4 +62,76 @@ func (bc *BlogController) GetAllBlog(c *fiber.Ctx) error {
 	}
 
 	return responses.SuccessResponse(c, http.StatusOK, blog)
+}
+
+func (bc *BlogController) GetBlogById(c *fiber.Ctx) error {
+	blogId := c.Params("id")
+	blogIdHex, err := primitive.ObjectIDFromHex(blogId)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+	blog, err := bc.BlogRepo.GetBlogById(c.Context(), blogIdHex)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(c, http.StatusOK, blog)
+}
+
+func (bc *BlogController) UpdateBlogById(c *fiber.Ctx) error {
+	blogId := c.Params("id")
+	blogIdHex, err := primitive.ObjectIDFromHex(blogId)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+
+	var blog models.Blog
+
+	var reqBody models.Blog
+
+	existingBlog, err := bc.BlogRepo.GetBlogById(c.Context(), blogIdHex)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	if err := c.BodyParser(&reqBody); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+
+	blog = models.Blog{
+		Id:        existingBlog.Id,
+		Title:     reqBody.Title,
+		Content:   reqBody.Content,
+		CreatedAt: existingBlog.CreatedAt,
+	}
+
+	if err := c.BodyParser(&blog); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+
+	if validationErr := validate.Struct(&blog); validationErr != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, validationErr.Error())
+	}
+
+	blog, err = bc.BlogRepo.UpdateBlogById(c.Context(), blogIdHex, blog)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(c, http.StatusOK, blog)
+}
+
+func (bc *BlogController) DeleteBlogById(c *fiber.Ctx) error {
+	blogId := c.Params("id")
+	blogIdHex, err := primitive.ObjectIDFromHex(blogId)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+
+	_, err = bc.BlogRepo.DeleteBlogById(c.Context(), blogIdHex)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(c, http.StatusOK, nil)
 }
