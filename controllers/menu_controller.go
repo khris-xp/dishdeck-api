@@ -169,3 +169,57 @@ func (mc *MenuController) UnlikedMenu(ctx *fiber.Ctx) error {
 
 	return responses.SuccessResponse(ctx, http.StatusOK, nil)
 }
+
+func (c *MenuController) EditRatingMenu(ctx *fiber.Ctx) error {
+	menuId := ctx.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
+
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	var reqBody types.MenuRatingRequest
+
+	if err := ctx.BodyParser(&reqBody); err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	if validationErr := validate.Struct(&reqBody); validationErr != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, validationErr.Error())
+	}
+
+	err = c.MenuRepo.EditRatingMenu(ctx.Context(), id, reqBody.Rate)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+}
+
+func (c *MenuController) EditReviewMenu(ctx *fiber.Ctx) error {
+	menuId := ctx.Params("id")
+
+	id, err := primitive.ObjectIDFromHex(menuId)
+
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	var reqBody types.MenuReviewRequest
+
+	if err := ctx.BodyParser(&reqBody); err != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	if validationErr := validate.Struct(&reqBody); validationErr != nil {
+		return responses.ErrorResponse(ctx, http.StatusBadRequest, validationErr.Error())
+	}
+
+	err = c.MenuRepo.EditReviewMenu(ctx.Context(), id, reqBody.Review)
+	if err != nil {
+		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+}

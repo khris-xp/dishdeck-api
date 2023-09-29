@@ -24,3 +24,11 @@ type MenuCreateRequest struct {
 	Category    string `json:"category" validate:"required"`
 	CreatedBy   string `json:"createdBy" validate:"required"`
 }
+
+type MenuRatingRequest struct {
+	Rate float64 `json:"rate" validate:"required"`
+}
+
+type MenuReviewRequest struct {
+	Review float64 `json:"review" validate:"required"`
+}

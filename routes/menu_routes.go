@@ -19,4 +19,6 @@ func MenuRoutes(app *fiber.App) {
 	app.Delete("/api/menu/:id", middlewares.AuthMiddleware(), menuController.DeleteMenuByID)
 	app.Put("/api/menu/:id/like", middlewares.AuthMiddleware(), menuController.LikedMenu)
 	app.Put("/api/menu/:id/unlike", middlewares.AuthMiddleware(), menuController.UnlikedMenu)
+	app.Put("/api/menu/:id/rating", middlewares.AuthMiddleware(), menuController.EditRatingMenu)
+	app.Put("/api/menu/:id/review", middlewares.AuthMiddleware(), menuController.EditReviewMenu)
 }

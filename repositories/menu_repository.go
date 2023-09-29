@@ -122,3 +122,27 @@ func (r *MenuRepository) UnlikedMenu(ctx context.Context, id primitive.ObjectID)
 
 	return nil
 }
+
+func (r *MenuRepository) EditReviewMenu(ctx context.Context, id primitive.ObjectID, review float64) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.M{"review": review}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *MenuRepository) EditRatingMenu(ctx context.Context, id primitive.ObjectID, rate float64) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	_, err := menuCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.M{"rate": rate}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
