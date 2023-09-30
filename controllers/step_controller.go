@@ -28,12 +28,12 @@ func (sc *StepController) CreateStep(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, fiber.StatusBadRequest, err.Error())
 	}
 
-	stepID, err := sc.StepRepo.CreateStep(c.Context(), step, id)
+	_, err = sc.StepRepo.CreateStep(c.Context(), step, id)
 	if err != nil {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, fiber.StatusCreated, stepID)
+	return responses.CreateStepSuccessResponse(c, fiber.StatusCreated)
 }
 
 func (sc *StepController) GetAllStep(c *fiber.Ctx) error {
@@ -42,7 +42,7 @@ func (sc *StepController) GetAllStep(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, fiber.StatusOK, step)
+	return responses.GetStepListResponse(c, fiber.StatusOK, step)
 }
 
 func (sc *StepController) GetStepByMenuId(c *fiber.Ctx) error {
@@ -58,7 +58,7 @@ func (sc *StepController) GetStepByMenuId(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, fiber.StatusOK, steps)
+	return responses.GetStepListResponse(c, fiber.StatusOK, steps)
 }
 
 func (sc *StepController) GetStepById(c *fiber.Ctx) error {
@@ -74,7 +74,7 @@ func (sc *StepController) GetStepById(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, fiber.StatusOK, step)
+	return responses.GetStepResponse(c, fiber.StatusOK, step)
 }
 
 func (sc *StepController) UpdateStep(c *fiber.Ctx) error {
@@ -107,7 +107,7 @@ func (sc *StepController) UpdateStep(c *fiber.Ctx) error {
 	if err != nil {
 		return responses.ErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}
-	return responses.SuccessResponse(c, fiber.StatusOK, nil)
+	return responses.UpdateStepSuccessResponse(c, fiber.StatusOK)
 }
 
 func (sc *StepController) DeleteStepById(ctx *fiber.Ctx) error {
@@ -125,5 +125,5 @@ func (sc *StepController) DeleteStepById(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, fiber.StatusOK, nil)
+	return responses.DeleteStepSuccessResponse(ctx, fiber.StatusOK)
 }

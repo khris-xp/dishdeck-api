@@ -30,6 +30,8 @@ func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu, user 
 	menu.CreatedAt = time.Now()
 	menu.UpdatedAt = time.Now()
 	menu.Likes = 0
+	menu.Review = 0
+	menu.Rate = 0
 	_, err := menuCollection.InsertOne(ctx, menu)
 	if err != nil {
 		return primitive.NilObjectID, err

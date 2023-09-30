@@ -54,11 +54,14 @@ func (mc *MenuController) CreateMenu(c *fiber.Ctx) error {
 	}
 
 	menuID, err := mc.MenuRepo.CreateMenu(c.Context(), menu, user)
+
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusCreated, menuID)
+	menu.Id = menuID
+
+	return responses.CreateMenuSuccessResponse(c, http.StatusCreated)
 }
 
 func (mc *MenuController) GetAllMenu(c *fiber.Ctx) error {
@@ -67,7 +70,7 @@ func (mc *MenuController) GetAllMenu(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, menuList)
+	return responses.GetMenuSuccessResponse(c, http.StatusOK, menuList)
 }
 
 func (mc *MenuController) GetMenuByID(c *fiber.Ctx) error {
@@ -82,7 +85,7 @@ func (mc *MenuController) GetMenuByID(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, menu)
+	return responses.GetMenuSuccessResponse(c, http.StatusOK, menu)
 }
 
 func (mc *MenuController) UpdateMenuByID(ctx *fiber.Ctx) error {
@@ -116,7 +119,7 @@ func (mc *MenuController) UpdateMenuByID(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, existingMenu)
+	return responses.UpdateMenuSuccessResponse(ctx, http.StatusOK)
 }
 
 func (mc *MenuController) DeleteMenuByID(ctx *fiber.Ctx) error {
@@ -133,7 +136,7 @@ func (mc *MenuController) DeleteMenuByID(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+	return responses.DeleteMenuSuccessResponse(ctx, http.StatusOK)
 }
 
 func (mc *MenuController) LikedMenu(ctx *fiber.Ctx) error {
@@ -150,7 +153,7 @@ func (mc *MenuController) LikedMenu(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+	return responses.UpdateMenuSuccessResponse(ctx, http.StatusOK)
 }
 
 func (mc *MenuController) UnlikedMenu(ctx *fiber.Ctx) error {
@@ -167,7 +170,7 @@ func (mc *MenuController) UnlikedMenu(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+	return responses.UpdateMenuSuccessResponse(ctx, http.StatusOK)
 }
 
 func (c *MenuController) EditRatingMenu(ctx *fiber.Ctx) error {
@@ -194,7 +197,7 @@ func (c *MenuController) EditRatingMenu(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+	return responses.UpdateMenuSuccessResponse(ctx, http.StatusOK)
 }
 
 func (c *MenuController) EditReviewMenu(ctx *fiber.Ctx) error {
@@ -221,5 +224,5 @@ func (c *MenuController) EditReviewMenu(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(ctx, http.StatusOK, nil)
+	return responses.UpdateMenuSuccessResponse(ctx, http.StatusOK)
 }

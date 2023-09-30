@@ -47,12 +47,12 @@ func (bc *BlogController) CreateBlog(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, validationErr.Error())
 	}
 
-	blogID, err := bc.BlogRepo.CreateBlog(c.Context(), blog, user)
+	_, err = bc.BlogRepo.CreateBlog(c.Context(), blog, user)
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusCreated, blogID)
+	return responses.CreateBlogSuccessResponse(c, http.StatusCreated)
 }
 
 func (bc *BlogController) GetAllBlog(c *fiber.Ctx) error {
@@ -61,7 +61,7 @@ func (bc *BlogController) GetAllBlog(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, blog)
+	return responses.GetBlogSuccessResponse(c, http.StatusOK, blog)
 }
 
 func (bc *BlogController) GetBlogById(c *fiber.Ctx) error {
@@ -75,7 +75,7 @@ func (bc *BlogController) GetBlogById(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, blog)
+	return responses.GetBlogSuccessResponse(c, http.StatusOK, blog)
 }
 
 func (bc *BlogController) UpdateBlogById(c *fiber.Ctx) error {
@@ -118,7 +118,7 @@ func (bc *BlogController) UpdateBlogById(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, blog)
+	return responses.UpdateBlogSuccessResponse(c, http.StatusOK)
 }
 
 func (bc *BlogController) DeleteBlogById(c *fiber.Ctx) error {
@@ -133,5 +133,5 @@ func (bc *BlogController) DeleteBlogById(c *fiber.Ctx) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return responses.SuccessResponse(c, http.StatusOK, nil)
+	return responses.DeleteBlogSuccessResponse(c, http.StatusOK)
 }

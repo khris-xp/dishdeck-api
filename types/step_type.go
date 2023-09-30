@@ -4,10 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type StepResponse struct {
+type StepListResponse struct {
 	Status  int        `json:"status"`
 	Message string     `json:"message"`
 	Data    *fiber.Map `json:"data"`
+}
+
+type StepResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+	Data    string `json:"data"`
 }
 
 type StepUpdateRequest struct {

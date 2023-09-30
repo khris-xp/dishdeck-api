@@ -12,10 +12,10 @@ type Menu struct {
 	Description string             `json:"description,omitempty" validate:"required"`
 	ImageUrl    string             `json:"imageUrl,omitempty" validate:"required"`
 	Category    string             `json:"category,omitempty" validate:"required"`
-	Review      float64            `json:"review" validate:"required"`
-	Rate        float64            `json:"rate" validate:"required"`
+	Review      float64            `json:"review"`
+	Rate        float64            `json:"rate"`
 	CreatedBy   string             `json:"createdBy,omitempty"`
-	Likes       int                `json:"likes,omitempty"`
+	Likes       int                `json:"likes"`
 	CreatedAt   time.Time          `json:"createdAt" bson:"createdAt"`
 	UpdatedAt   time.Time          `json:"updatedAt" bson:"updatedAt"`
 }

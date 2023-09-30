@@ -152,7 +152,7 @@ func (ac *AuthController) AddWishListByMenuID(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return responses.SuccessResponse(c, fiber.StatusOK, nil)
+	return responses.AddWishListResponse(c, fiber.StatusOK)
 }
 
 func (ac *AuthController) RemoveWishListByMenuID(c *fiber.Ctx) error {
@@ -170,5 +170,5 @@ func (ac *AuthController) RemoveWishListByMenuID(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return responses.SuccessResponse(c, fiber.StatusOK, nil)
+	return responses.RemoveWishListResponse(c, fiber.StatusOK)
 }
