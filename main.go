@@ -19,6 +19,7 @@ func main() {
 	routes.UserRoutes(app)
 	routes.StepRoutes(app)
 	routes.BlogRoutes(app)
+	routes.MediaRoutes(app)
 	port := configs.EnvPort()
 	app.Listen(":" + port)
 }
