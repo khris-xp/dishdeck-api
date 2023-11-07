@@ -9,71 +9,44 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func FileUpload(c *fiber.Ctx) error {
+type MediaController struct {
+	MediaRepo *repositories.MediaRepository
+}
+
+func NewMediaController(mediaRepo *repositories.MediaRepository) *MediaController {
+	return &MediaController{MediaRepo: mediaRepo}
+}
+
+func (m *MediaController) FileUpload(c *fiber.Ctx) error {
 	formHeader, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(
-			responses.MediaDto{
-				StatusCode: http.StatusInternalServerError,
-				Message:    "error",
-				Data:       nil,
-			})
+		return responses.UploadMediaErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
 	formFile, err := formHeader.Open()
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(
-			responses.MediaDto{
-				StatusCode: http.StatusInternalServerError,
-				Message:    "error",
-				Data:       nil,
-			})
+		return responses.UploadMediaErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	uploadUrl, err := repositories.NewMediaUpload().FileUpload(models.File{File: formFile})
+	uploadUrl, err := m.MediaRepo.FileUpload(models.File{File: formFile})
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(
-			responses.MediaDto{
-				StatusCode: http.StatusInternalServerError,
-				Message:    "error",
-				Data:       nil,
-			})
+		return responses.UploadMediaErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	return c.Status(http.StatusOK).JSON(
-		responses.MediaDto{
-			StatusCode: http.StatusOK,
-			Message:    "success",
-			Data:       &uploadUrl,
-		})
+	return responses.UploadMediaSuccessResponse(c, http.StatusOK, uploadUrl)
 }
 
-func RemoteUpload(c *fiber.Ctx) error {
+func (m *MediaController) RemoteUpload(c *fiber.Ctx) error {
 	var url models.Url
 
 	if err := c.BodyParser(&url); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(
-			responses.MediaDto{
-				StatusCode: http.StatusBadRequest,
-				Message:    "error",
-				Data:       nil,
-			})
+		return responses.UploadMediaErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	uploadUrl, err := repositories.NewMediaUpload().RemoteUpload(url)
+	uploadUrl, err := m.MediaRepo.RemoteUpload(url)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(
-			responses.MediaDto{
-				StatusCode: http.StatusInternalServerError,
-				Message:    "error",
-				Data:       nil,
-			})
+		return responses.UploadMediaErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	return c.Status(http.StatusOK).JSON(
-		responses.MediaDto{
-			StatusCode: http.StatusOK,
-			Message:    "success",
-			Data:       &uploadUrl,
-		})
+	return responses.UploadMediaSuccessResponse(c, http.StatusOK, uploadUrl)
 }

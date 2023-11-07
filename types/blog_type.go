@@ -1,9 +1,9 @@
 package types
 
 type BlogResponse struct {
-	Status  int         `json:"status"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+	Data    string `json:"data"`
 }
 
 type BlogListResponse struct {
