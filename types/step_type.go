@@ -1,13 +1,9 @@
 package types
 
-import (
-	"github.com/gofiber/fiber/v2"
-)
-
 type StepListResponse struct {
-	Status  int        `json:"status"`
-	Message string     `json:"message"`
-	Data    *fiber.Map `json:"data"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type StepResponse struct {
@@ -17,6 +13,6 @@ type StepResponse struct {
 }
 
 type StepUpdateRequest struct {
-	Title        string `json:"title" validate:"required"`
+	Title   string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`
 }

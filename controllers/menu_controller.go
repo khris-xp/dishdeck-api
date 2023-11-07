@@ -72,7 +72,6 @@ func (mc *MenuController) GetAllMenu(c *fiber.Ctx) error {
 
 	return responses.GetMenuSuccessResponse(c, http.StatusOK, menuList)
 }
-
 func (mc *MenuController) GetMenuByID(c *fiber.Ctx) error {
 	menuID := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(menuID)

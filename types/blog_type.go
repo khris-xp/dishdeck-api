@@ -1,19 +1,15 @@
 package types
 
-import (
-	"github.com/gofiber/fiber/v2"
-)
-
 type BlogResponse struct {
-	Status  int        `json:"status"`
-	Message string     `json:"message"`
-	Data    string `json:"data"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type BlogListResponse struct {
-	Status  int        `json:"status"`
-	Message string     `json:"message"`
-	Data    *fiber.Map `json:"data"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type BlogUpdateRequest struct {

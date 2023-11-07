@@ -1,9 +1,5 @@
 package types
 
-import (
-	"github.com/gofiber/fiber/v2"
-)
-
 type MenuResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
@@ -11,9 +7,9 @@ type MenuResponse struct {
 }
 
 type MenuListResponse struct {
-	Status  int        `json:"status"`
-	Message string     `json:"message"`
-	Data    *fiber.Map `json:"data"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type MenuUpdateRequest struct {

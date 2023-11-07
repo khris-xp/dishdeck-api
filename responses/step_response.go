@@ -11,7 +11,7 @@ func GetStepListResponse(c *fiber.Ctx, statusCode int, data []models.Step) error
 	return c.Status(statusCode).JSON(types.StepListResponse{
 		Status:  statusCode,
 		Message: "success",
-		Data:    &fiber.Map{"steps": data},
+		Data:    data,
 	})
 }
 
@@ -19,7 +19,7 @@ func GetStepResponse(c *fiber.Ctx, statusCode int, data models.Step) error {
 	return c.Status(statusCode).JSON(types.StepListResponse{
 		Status:  statusCode,
 		Message: "success",
-		Data:    &fiber.Map{"step": data},
+		Data:    data,
 	})
 }
 

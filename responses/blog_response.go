@@ -10,7 +10,7 @@ func GetBlogSuccessResponse(c *fiber.Ctx, statusCode int, data interface{}) erro
 	return c.Status(statusCode).JSON(types.BlogListResponse{
 		Status:  statusCode,
 		Message: "success",
-		Data:    &fiber.Map{"data": data},
+		Data: data,
 	})
 }
 
