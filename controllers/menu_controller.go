@@ -108,10 +108,10 @@ func (mc *MenuController) UpdateMenuByID(ctx *fiber.Ctx) error {
 		return responses.ErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
 
-	existingMenu.Name = reqBody.Name
-	existingMenu.Description = reqBody.Description
-	existingMenu.ImageUrl = reqBody.ImageUrl
-	existingMenu.Category = reqBody.Category
+	existingMenu.Name = *reqBody.Name
+	existingMenu.Description = *reqBody.Description
+	existingMenu.ImageUrl = *reqBody.ImageUrl
+	existingMenu.Category = *reqBody.Category
 
 	err = mc.MenuRepo.UpdateMenuByID(ctx.Context(), id, existingMenu)
 	if err != nil {

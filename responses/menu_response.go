@@ -39,9 +39,9 @@ func DeleteMenuSuccessResponse(c *fiber.Ctx, statusCode int) error {
 }
 
 func ErrorResponse(c *fiber.Ctx, statusCode int, errMsg string) error {
-	return c.Status(statusCode).JSON(types.MenuListResponse{
+	return c.Status(statusCode).JSON(types.MenuResponse{
 		Status:  statusCode,
 		Message: "error",
-		Data:    &fiber.Map{"data": errMsg},
+		Data:    "Something went wrong",
 	})
 }

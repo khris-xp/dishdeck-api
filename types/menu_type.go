@@ -13,18 +13,18 @@ type MenuListResponse struct {
 }
 
 type MenuUpdateRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Description string `json:"description" validate:"required"`
-	ImageUrl    string `json:"imageUrl" validate:"required"`
-	Category    string `json:"category" validate:"required"`
+	Name        *string `json:"name" validate:"required"`
+	Description *string `json:"description" validate:"required"`
+	ImageUrl    *string `json:"imageUrl" validate:"required"`
+	Category    *string `json:"category" validate:"required"`
 }
 
 type MenuCreateRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Description string `json:"description" validate:"required"`
-	ImageUrl    string `json:"imageUrl" validate:"required"`
-	Category    string `json:"category" validate:"required"`
-	CreatedBy   string `json:"createdBy" validate:"required"`
+	Name        *string `json:"name" validate:"required"`
+	Description *string `json:"description" validate:"required"`
+	ImageUrl    *string `json:"imageUrl" validate:"required"`
+	Category    *string `json:"category" validate:"required"`
+	CreatedBy   *string `json:"createdBy" validate:"required"`
 }
 
 type MenuRatingRequest struct {
