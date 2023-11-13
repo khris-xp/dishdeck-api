@@ -11,6 +11,11 @@ var (
 	validate = validator.New()
 )
 
+type MediaRepositoryInterface interface {
+	FileUpload(file models.File) (string, error)
+	RemoteUpload(url models.Url) (string, error)
+}
+
 type MediaRepository struct{}
 
 func NewMediaRepository() *MediaRepository {

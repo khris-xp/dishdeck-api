@@ -12,7 +12,7 @@ const MenuAPIPath = "/api/menu/:id"
 
 func MenuRoutes(app *fiber.App) {
 	menuRepo := repositories.NewMenuRepository()
-	menuController := controllers.NewMenuController(menuRepo)
+	menuController := controllers.NewMenuController(*menuRepo)
 
 	app.Post("/api/menu", middlewares.AuthMiddleware(), menuController.CreateMenu)
 	app.Get("/api/menu", menuController.GetAllMenu)

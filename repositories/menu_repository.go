@@ -16,10 +16,26 @@ var (
 	timeout                          = 10 * time.Second
 )
 
-type MenuRepository struct{}
+type MenuRepositoryInterface interface {
+	CreateMenu(ctx context.Context, menu models.Menu, user models.User) (primitive.ObjectID, error)
+	GetAllMenu(ctx context.Context) ([]models.Menu, error)
+	GetMenuByID(ctx context.Context, id primitive.ObjectID) (models.Menu, error)
+	UpdateMenuByID(ctx context.Context, id primitive.ObjectID, menu models.Menu) error
+	DeleteMenuByID(ctx context.Context, id primitive.ObjectID) error
+	LikedMenu(ctx context.Context, id primitive.ObjectID) error
+	UnlikedMenu(ctx context.Context, id primitive.ObjectID) error
+	EditReviewMenu(ctx context.Context, id primitive.ObjectID, review float64) error
+	EditRatingMenu(ctx context.Context, id primitive.ObjectID, rate float64) error
+}
+
+type MenuRepository struct {
+	collection *mongo.Collection
+}
 
 func NewMenuRepository() *MenuRepository {
-	return &MenuRepository{}
+	return &MenuRepository{
+		collection: configs.GetCollection(configs.DB, "menu"),
+	}
 }
 
 func (r *MenuRepository) CreateMenu(ctx context.Context, menu models.Menu, user models.User) (primitive.ObjectID, error) {

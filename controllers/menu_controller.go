@@ -24,11 +24,16 @@ var (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type MenuController struct {
-	MenuRepo *repositories.MenuRepository
+	MenuRepo  repositories.MenuRepository
+	Validator validator.Validate
+	Timeout   time.Duration
 }
 
-func NewMenuController(menuRepo *repositories.MenuRepository) *MenuController {
-	return &MenuController{MenuRepo: menuRepo}
+func NewMenuController(menuRepo repositories.MenuRepository) *MenuController {
+	return &MenuController{
+		MenuRepo: menuRepo,
+		Timeout:  10 * time.Second,
+	}
 }
 
 func (mc *MenuController) CreateMenu(c *fiber.Ctx) error {

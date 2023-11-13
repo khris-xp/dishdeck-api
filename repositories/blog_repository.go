@@ -15,10 +15,22 @@ var (
 	blogCollection *mongo.Collection = configs.GetCollection(configs.DB, "blog")
 )
 
-type BlogRepository struct{}
+type BlogRepositoryInterface interface {
+	CreateBlog(ctx context.Context, blog models.Blog, user models.User) (primitive.ObjectID, error)
+	GetAllBlog(ctx context.Context) ([]models.Blog, error)
+	GetBlogById(ctx context.Context, id primitive.ObjectID) (models.Blog, error)
+	UpdateBlogById(ctx context.Context, id primitive.ObjectID, blog models.Blog) (models.Blog, error)
+	DeleteBlogById(ctx context.Context, id primitive.ObjectID) (int64, error)
+}
+
+type BlogRepository struct {
+	collection *mongo.Collection
+}
 
 func NewBlogRepository() *BlogRepository {
-	return &BlogRepository{}
+	return &BlogRepository{
+		collection: configs.GetCollection(configs.DB, "blog"),
+	}
 }
 
 func (r *BlogRepository) CreateBlog(ctx context.Context, blog models.Blog, user models.User) (primitive.ObjectID, error) {
