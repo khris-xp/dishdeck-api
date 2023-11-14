@@ -15,10 +15,23 @@ var (
 	stepCollection *mongo.Collection = configs.GetCollection(configs.DB, "step")
 )
 
-type StepRepository struct{}
+type StepRepositoryInterface interface {
+	CreateStep(ctx context.Context, step models.Step, menuId primitive.ObjectID) (primitive.ObjectID, error)
+	GetAllStep(ctx context.Context) ([]models.Step, error)
+	GetStepById(ctx context.Context, id primitive.ObjectID) (models.Step, error)
+	GetStepByMenuId(ctx context.Context, id primitive.ObjectID) ([]models.Step, error)
+	UpdateStepById(ctx context.Context, id primitive.ObjectID, step models.Step) error
+	DeleteStepById(ctx context.Context, id primitive.ObjectID) error
+}
+
+type StepRepository struct {
+	collection *mongo.Collection
+}
 
 func NewStepRepository() *StepRepository {
-	return &StepRepository{}
+	return &StepRepository{
+		collection: configs.GetCollection(configs.DB, "step"),
+	}
 }
 
 func (r *StepRepository) CreateStep(ctx context.Context, step models.Step, menuId primitive.ObjectID) (primitive.ObjectID, error) {

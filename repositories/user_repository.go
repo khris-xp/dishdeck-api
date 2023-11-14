@@ -21,10 +21,23 @@ var (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 var userTimeout = 10 * time.Second
 
-type UserRepository struct{}
+type UserRepositoryInterface interface {
+	RegisterUser(ctx context.Context, user models.User) (string, error)
+	GetUserByUsername(ctx context.Context, username string) (models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (models.User, error)
+	GetUserByID(ctx context.Context, id primitive.ObjectID) (models.User, error)
+	AddWishListByMenuID(ctx context.Context, menuID primitive.ObjectID, userID primitive.ObjectID) error
+	RemoveWishListByMenuID(ctx context.Context, menuID primitive.ObjectID, userID primitive.ObjectID) error
+}
+
+type UserRepository struct {
+	collection *mongo.Collection
+}
 
 func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+	return &UserRepository{
+		collection: configs.GetCollection(configs.DB, "users"),
+	}
 }
 
 func (r *UserRepository) RegisterUser(ctx context.Context, user models.User) (string, error) {
